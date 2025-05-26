@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>سمير عساف للحلول المالية</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: url('bitcoin.jpg') no-repeat center center fixed;
+      background-size: cover;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      position: relative;
+    }
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0; right: 0; bottom: 0; left: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 0;
+    }
+    .box {
+      position: relative;
+      z-index: 1;
+      background-color: rgba(255, 255, 255, 0.15);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+      text-align: center;
+      width: 90%;
+      max-width: 600px;
+      backdrop-filter: blur(10px);
+      display: none;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: none;
+      font-size: 15px;
+      background-color: rgba(255, 255, 255, 0.9);
+      color: #333;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #fff;
+      color: #2575fc;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      margin-top: 15px;
+      cursor: pointer;
+    }
+    .option-btn {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 10px;
+      text-align: right;
+      padding: 15px;
+      background-color: rgba(255,255,255,0.2);
+      margin-top: 10px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .icon { font-size: 28px; }
+    .back-btn {
+      background-color: #ffcccc;
+      color: #900;
+      margin-top: 20px;
+    }
+    h2 { margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+
+<!-- تسجيل دخول -->
+<div class="box" id="loginBox">
+  <h2>تسجيل الدخول</h2>
+  <input type="text" id="nameInput" placeholder="الاسم الكامل">
+  <input type="email" id="emailInput" placeholder="البريد الإلكتروني">
+  <input type="password" id="passwordInput" placeholder="كلمة المرور">
+  <button onclick="login()">دخول</button>
+  <p><a href="#" style="color: #fff; text-decoration: underline;" onclick="switchToRegister()">إنشاء حساب جديد</a></p>
+  <p id="message"></p>
+</div>
+
+<!-- تسجيل حساب جديد -->
+<div class="box" id="registerBox">
+  <h2>إنشاء حساب جديد</h2>
+  <input type="text" id="regName" placeholder="اسم المستخدم">
+  <input type="email" id="regEmail" placeholder="البريد الإلكتروني">
+  <input type="password" id="regPassword" placeholder="كلمة المرور">
+  <button onclick="register()">تسجيل</button>
+  <button class="back-btn" onclick="switchToLogin()">رجوع</button>
+  <p id="registerMessage"></p>
+</div>
+
+<!-- قائمة الخدمات -->
+<div class="box" id="optionsBox">
+  <h2 id="welcomeMessage"></h2>
+  <div class="option-btn" onclick="showBox('investBox')"><div class="icon">💼</div>الاستشارات الاستثمارية</div>
+  <div class="option-btn" onclick="showBox('riskBox')"><div class="icon">🛡️</div>إدارة المخاطر</div>
+  <div class="option-btn" onclick="showBox('reportBox')"><div class="icon">📊</div>التقارير المالية</div>
+</div>
+
+<!-- استشارات استثمارية -->
+<div class="box" id="investBox">
+  <h2>استشارة استثمارية</h2>
+  <input type="number" id="amount" placeholder="المبلغ المراد استثماره">
+  <select id="riskLevel">
+    <option value="">اختر مستوى المخاطرة</option>
+    <option value="low">منخفض</option>
+    <option value="medium">متوسط</option>
+    <option value="high">مرتفع</option>
+  </select>
+  <select id="duration">
+    <option value="">اختر المدة</option>
+    <option value="short">قصيرة</option>
+    <option value="long">طويلة</option>
+  </select>
+  <button onclick="analyzeInvestment()">تحليل</button>
+  <p id="investResult"></p>
+  <button class="back-btn" onclick="back()">رجوع</button>
+</div>
+
+<!-- إدارة المخاطر -->
+<div class="box" id="riskBox">
+  <h2>تحليل المخاطر</h2>
+  <input type="number" id="riskIncome" placeholder="ما هو دخلك الشهري؟">
+  <select id="riskTolerance">
+    <option value="">درجة تحملك للمخاطر؟</option>
+    <option value="low">منخفضة</option>
+    <option value="medium">متوسطة</option>
+    <option value="high">مرتفعة</option>
+  </select>
+  <button onclick="analyzeRisk()">تحليل المخاطر</button>
+  <p id="riskResult"></p>
+  <button class="back-btn" onclick="back()">رجوع</button>
+</div>
+
+<!-- التقارير المالية -->
+<div class="box" id="reportBox">
+  <h2>تقرير مالي شهري</h2>
+  <input type="number" id="monthlyIncome" placeholder="الدخل الشهري">
+  <input type="number" id="monthlyExpense" placeholder="المصاريف الشهرية">
+  <button onclick="generateReport()">عرض التقرير</button>
+  <p id="reportResult"></p>
+  <button class="back-btn" onclick="back()">رجوع</button>
+</div>
+
+<script>
+  document.getElementById("loginBox").style.display = "block";
+
+  function switchToRegister() {
+    document.getElementById("loginBox").style.display = "none";
+    document.getElementById("registerBox").style.display = "block";
+  }
+
+  function switchToLogin() {
+    document.getElementById("registerBox").style.display = "none";
+    document.getElementById("loginBox").style.display = "block";
+  }
+
+  function register() {
+    const name = document.getElementById("regName").value;
+    const email = document.getElementById("regEmail").value;
+    const password = document.getElementById("regPassword").value;
+
+    if (!name || !email || !password) {
+      document.getElementById("registerMessage").textContent = "يرجى تعبئة جميع الحقول.";
+      return;
+    }
+
+    localStorage.setItem("user", JSON.stringify({ name, email, password }));
+    document.getElementById("registerMessage").textContent = "تم التسجيل بنجاح! يمكنك تسجيل الدخول الآن.";
+  }
+
+  function login() {
+    const name = document.getElementById("nameInput").value;
+    const email = document.getElementById("emailInput").value;
+    const password = document.getElementById("passwordInput").value;
+    const savedUser = JSON.parse(localStorage.getItem("user"));
+
+    if (!savedUser || savedUser.email !== email || savedUser.password !== password) {
+      document.getElementById("message").textContent = "بيانات الدخول غير صحيحة.";
+      return;
+    }
+
+    document.getElementById("loginBox").style.display = "none";
+    document.getElementById("optionsBox").style.display = "block";
+    document.getElementById("welcomeMessage").textContent = `مرحباً ${savedUser.name}، اختر الخدمة:`;
+  }
+
+  function showBox(boxId) {
+    document.getElementById("optionsBox").style.display = "none";
+    document.getElementById(boxId).style.display = "block";
+  }
+
+  function back() {
+    document.querySelectorAll('.box').forEach(el => el.style.display = "none");
+    document.getElementById("optionsBox").style.display = "block";
+  }
+
+  function analyzeInvestment() {
+    const amount = +document.getElementById("amount").value;
+    const risk = document.getElementById("riskLevel").value;
+    const duration = document.getElementById("duration").value;
+    let msg = "ننصح بـ ";
+
+    if (!amount || !risk || !duration) {
+      document.getElementById("investResult").textContent = "يرجى تعبئة كل الحقول.";
+      return;
+    }
+
+    if (risk === "low") {
+      msg += duration === "short" ? "ودائع بنكية" : "صناديق دخل ثابت.";
+    } else if (risk === "medium") {
+      msg += duration === "short" ? "أسهم مستقرة" : "محفظة متنوعة.";
+    } else {
+      msg += "الأسهم التقنية والعملات الرقمية.";
+    }
+
+    document.getElementById("investResult").textContent = msg;
+  }
+
+  function analyzeRisk() {
+    const income = +document.getElementById("riskIncome").value;
+    const tolerance = document.getElementById("riskTolerance").value;
+    let msg = "";
+
+    if (!income || !tolerance) {
+      document.getElementById("riskResult").textContent = "يرجى تعبئة البيانات.";
+      return;
+    }
+
+    if (tolerance === "low") msg = "ننصحك بتأمين صحي واستثمارات منخفضة المخاطر.";
+    else if (tolerance === "medium") msg = "احرص على التوازن بين الأمان والنمو.";
+    else msg = "راقب السوق وكن جاهزاً لتقلباته العالية.";
+
+    document.getElementById("riskResult").textContent = msg;
+  }
+
+  function generateReport() {
+    const income = +document.getElementById("monthlyIncome").value;
+    const expense = +document.getElementById("monthlyExpense").value;
+
+    if (!income || !expense) {
+      document.getElementById("reportResult").textContent = "أدخل الدخل والمصاريف بشكل صحيح.";
+      return;
+    }
+
+    const saving = income - expense;
+    const msg = saving >= 0
+      ? `أرباحك هذا الشهر: ${saving} ريال. ممتاز!`
+      : `عجز بقيمة ${Math.abs(saving)} ريال. راجع نفقاتك.`;
+
+    document.getElementById("reportResult").textContent = msg;
+  }
+</script>
+
+</body>
+</html>
