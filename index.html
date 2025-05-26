@@ -110,6 +110,7 @@
   <div class="option-btn" onclick="showBox('investBox')"><div class="icon">💼</div>الاستشارات الاستثمارية</div>
   <div class="option-btn" onclick="showBox('riskBox')"><div class="icon">🛡️</div>إدارة المخاطر</div>
   <div class="option-btn" onclick="showBox('reportBox')"><div class="icon">📊</div>التقارير المالية</div>
+  <button class="back-btn" onclick="logout()">تسجيل الخروج</button>
 </div>
 
 <!-- استشارات استثمارية -->
@@ -158,15 +159,17 @@
 </div>
 
 <script>
-  document.getElementById("loginBox").style.display = "block";
+  function hideAll() {
+    document.querySelectorAll('.box').forEach(el => el.style.display = "none");
+  }
 
   function switchToRegister() {
-    document.getElementById("loginBox").style.display = "none";
+    hideAll();
     document.getElementById("registerBox").style.display = "block";
   }
 
   function switchToLogin() {
-    document.getElementById("registerBox").style.display = "none";
+    hideAll();
     document.getElementById("loginBox").style.display = "block";
   }
 
@@ -195,18 +198,25 @@
       return;
     }
 
-    document.getElementById("loginBox").style.display = "none";
+    localStorage.setItem("loggedIn", "true");
+    hideAll();
     document.getElementById("optionsBox").style.display = "block";
     document.getElementById("welcomeMessage").textContent = `مرحباً ${savedUser.name}، اختر الخدمة:`;
   }
 
+  function logout() {
+    localStorage.setItem("loggedIn", "false");
+    hideAll();
+    document.getElementById("loginBox").style.display = "block";
+  }
+
   function showBox(boxId) {
-    document.getElementById("optionsBox").style.display = "none";
+    hideAll();
     document.getElementById(boxId).style.display = "block";
   }
 
   function back() {
-    document.querySelectorAll('.box').forEach(el => el.style.display = "none");
+    hideAll();
     document.getElementById("optionsBox").style.display = "block";
   }
 
@@ -265,7 +275,19 @@
 
     document.getElementById("reportResult").textContent = msg;
   }
-</script>
 
+  window.onload = function () {
+    const loggedIn = localStorage.getItem("loggedIn");
+    const savedUser = JSON.parse(localStorage.getItem("user"));
+
+    if (loggedIn === "true" && savedUser) {
+      hideAll();
+      document.getElementById("optionsBox").style.display = "block";
+      document.getElementById("welcomeMessage").textContent = `مرحباً ${savedUser.name}، اختر الخدمة:`;
+    } else {
+      document.getElementById("loginBox").style.display = "block";
+    }
+  }
+</script>
 </body>
 </html>
